@@ -35,14 +35,14 @@
             <div class="fly-panel" style="margin-bottom: 0;">
                 <div class="fly-panel-title fly-filter">
                     <a th:href="@{/index(keyword=${keyword},categoryId=${categoryId},orderBy=${orderBy})}"
-                       th:class="${period == null ? 'layui-this':''}">默认</a>
+                       th:class="${period == null ? 'layui-this':''}">帖子</a>
                     <span class="fly-mid"></span>
-                    <a th:class="${period == 'hot7' ? 'layui-this':''}"
+                    <!-- <a th:class="${period == 'hot7' ? 'layui-this':''}"
                        th:href="@{/index(period='hot7',keyword=${keyword},categoryId=${categoryId},orderBy=${orderBy})}">周榜</a>
                     <span class="fly-mid"></span>
                     <a th:class="${period == 'hot30' ? 'layui-this':''}"
                        th:href="@{/index(period='hot30',keyword=${keyword},categoryId=${categoryId},orderBy=${orderBy})}">月榜</a>
-                    <span class="fly-mid"></span>
+                    <span class="fly-mid"></span> -->
                     <span class="fly-filter-right layui-hide-xs">
                         <a th:href="@{/index(orderBy='new',period=${period},keyword=${keyword},categoryId=${categoryId})}"
                            th:class="${orderBy == 'new' ? 'layui-this':''}">按最新</a>
@@ -72,7 +72,7 @@
                                 </h2>
                                 <div class="fly-list-info">
                                     <a th:href="@{${'/userCenter/'+bbsPostListEntity.publishUserId}}" link>
-                                        <cite th:text="${bbsPostListEntity.nickName}">程序员十三</cite>
+                                        <cite th:text="${bbsPostListEntity.nickName}"></cite>
                                     </a>
                                     <span th:text="${#dates.format(bbsPostListEntity.createTime, 'yyyy-MM-dd HH:mm:ss')}">刚刚</span>
                                     <span class="fly-list-kiss layui-hide-xs" title="赞"><i
@@ -137,7 +137,7 @@
         </div>
         <div class="layui-col-md4">
 
-            <div class="fly-panel">
+            <!-- <div class="fly-panel">
                 <h3 class="fly-panel-title">温馨通道</h3>
                 <ul class="fly-panel-main fly-list-static">
                     <li>
@@ -156,13 +156,13 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
             <!-- 4.渲染本周热议列表 -->
-            <dl class="fly-panel fly-list-one">
+            <!-- <dl class="fly-panel fly-list-one">
                 <dt class="fly-panel-title">本周热议</dt>
-                <th:block th:if="${#lists.isEmpty(hotTopicBBSPostList)}">
+                <th:block th:if="${#lists.isEmpty(hotTopicBBSPostList)}"> -->
                     <!-- 无数据时 -->
-                    <div class="fly-none">没有相关数据</div>
+                    <!-- <div class="fly-none">没有相关数据</div>
                 </th:block>
                 <th:block th:unless="${#lists.isEmpty(hotTopicBBSPostList)}">
                     <th:block th:each="bbsEntity : ${hotTopicBBSPostList}">
@@ -173,9 +173,9 @@
                         </dd>
                     </th:block>
                 </th:block>
-            </dl>
+            </dl> -->
 
-            <div class="fly-panel">
+            <!-- <div class="fly-panel">
                 <div class="fly-panel-title">
                     我的公众号
                 </div>
@@ -195,9 +195,9 @@
                         <img style="max-width: 60%;" th:src="@{/images/my-book01.png}">
                     </a>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="fly-panel fly-link">
+            <!-- <div class="fly-panel fly-link">
                 <h3 class="fly-panel-title">友情链接</h3>
                 <dl class="fly-panel-main">
                     <dd><a href="http://www.layui.com/" target="_blank">layui</a>
@@ -211,17 +211,17 @@
                     <dd><a href="http://13blog.site" target="_blank">13blog.site</a>
                     <dd>
                 </dl>
-            </div>
+            </div> -->
 
         </div>
     </div>
 </div>
 
 <div class="fly-footer">
-    <p>My-BBS社区 2021 &copy; <a href="https://github.com/ZHENFENG13/My-BBS" target="_blank">十三</a></p>
+<!--    <p>My-BBS社区 2021 &copy; <a href="https://github.com/ZHENFENG13/My-BBS" target="_blank">十三</a></p>-->
 </div>
 
-<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/modules/layui/layui.js}"></script>
 <script type="text/javascript">
     layui.use(['layer', 'element', 'jquery'], function () {
         var layer = layui.layer, $ = layui.$, element = layui.element;

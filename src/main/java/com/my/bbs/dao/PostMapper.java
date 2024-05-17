@@ -2,10 +2,12 @@ package com.my.bbs.dao;
 
 import com.my.bbs.entity.Post;
 import com.my.bbs.util.PageQueryUtil;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface PostMapper {
     int deleteByPrimaryKey(Long postId);
 

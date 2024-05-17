@@ -7,12 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-/**
- * 用户表mapper接口
- *
- * @author dinghao
- * @date 2021/3/12
- */
+
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
     int deleteByPrimaryKey(Long userId);
@@ -23,7 +18,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     User selectByPrimaryKey(Long userId);
 
-    List<User> selectByPrimaryKeys(@Param("userIds") List<Long> userIds);
+    List<User> selectByPrimaryKeys(@Param("ids") List<Long> userIds);
 
     User selectByLoginName(String loginName);
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -47,7 +48,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseBody
-    public R login(HttpServletRequest request, String username, String password, String code, boolean rememberMe) {
+    public R login(HttpServletRequest request, String username, String password, String code, boolean rememberMe, HttpSession session) {
         if (StringUtil.isBlank(username, password)) {
             return R.failed("账号或密码不能为空");
         }
@@ -55,7 +56,7 @@ public class LoginController {
         if (!flag) {
             return R.failed("验证码不正确");
         }
-        if (userService.doLogin(username, password, rememberMe)) {
+        if (userService.doLogin(username, password, rememberMe,session)) {
             return R.succeed("登录成功");
         }
         return R.failed("登录失败");

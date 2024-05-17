@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.my.bbs.dao.BBSPostCategoryMapper">
-  <resultMap id="BaseResultMap" type="com.my.bbs.entity.BBSPostCategory">
+<mapper namespace="com.my.bbs.dao.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.my.bbs.entity.Category">
     <id column="category_id" jdbcType="INTEGER" property="categoryId" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
     <result column="category_rank" jdbcType="INTEGER" property="categoryRank" />
@@ -27,13 +27,13 @@
     delete from tb_post_category
     where category_id = #{categoryId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.my.bbs.entity.BBSPostCategory">
+  <insert id="insert" parameterType="com.my.bbs.entity.Category">
     insert into tb_post_category (category_id, category_name, category_rank, 
       is_deleted, create_time)
     values (#{categoryId,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR}, #{categoryRank,jdbcType=INTEGER}, 
       #{isDeleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.my.bbs.entity.BBSPostCategory">
+  <insert id="insertSelective" parameterType="com.my.bbs.entity.Category">
     insert into tb_post_category
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="categoryId != null">
@@ -70,7 +70,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.my.bbs.entity.BBSPostCategory">
+  <update id="updateByPrimaryKeySelective" parameterType="com.my.bbs.entity.Category">
     update tb_post_category
     <set>
       <if test="categoryName != null">
@@ -88,7 +88,7 @@
     </set>
     where category_id = #{categoryId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.my.bbs.entity.BBSPostCategory">
+  <update id="updateByPrimaryKey" parameterType="com.my.bbs.entity.Category">
     update tb_post_category
     set category_name = #{categoryName,jdbcType=VARCHAR},
       category_rank = #{categoryRank,jdbcType=INTEGER},

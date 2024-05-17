@@ -4,6 +4,8 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.my.bbs.common.Constants;
+import com.my.bbs.common.ServiceResultEnum;
 import com.my.bbs.common.constant.CommonConstant;
 import com.my.bbs.common.exception.BusinessException;
 import com.my.bbs.dao.RoleMapper;
@@ -16,12 +18,10 @@ import com.my.bbs.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-/**
- * 用户业务接口实现
- *
- * @author dinghao
- * @date 2021/3/16
- */
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -32,14 +32,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final RoleMapper roleMapper;
 
     @Override
-    public boolean doLogin(String username, String password, boolean rememberMe) {
-        System.out.println("111"+ 0111);
+    public boolean doLogin(String username, String password, boolean rememberMe, HttpSession httpSession) {
         User u = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         if (u == null) {
             throw new BusinessException("用户不存在");
         }
         if (!SaSecureUtil.sha256(password).equals(u.getPassword())) {
             throw new BusinessException("密码不正确");
+        }
+        if (u != null && httpSession != null) {
+            httpSession.setAttribute(Constants.USER_SESSION_KEY, u);
+            //修改最近登录时间
+//            u.setLastLoginTime(new Date());
+            userMapper.updateByPrimaryKeySelective(u);
+            return true;
         }
         StpUtil.login(u.getId(), rememberMe);
         return true;

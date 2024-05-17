@@ -3,6 +3,8 @@ package com.my.bbs.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.my.bbs.entity.User;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * 用户表业务接口
  *
@@ -19,7 +21,7 @@ public interface UserService extends IService<User> {
      * @param rememberMe
      * @return
      */
-    boolean doLogin(String username, String password, boolean rememberMe);
+    boolean doLogin(String username, String password, boolean rememberMe, HttpSession httpSession);
 
     /**
      * 新增用户
