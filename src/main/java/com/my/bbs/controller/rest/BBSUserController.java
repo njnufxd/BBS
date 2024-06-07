@@ -10,7 +10,6 @@ import com.my.bbs.service.BBSPostCommentService;
 import com.my.bbs.service.BBSPostService;
 import com.my.bbs.service.BBSUserService;
 import com.my.bbs.util.MD5Util;
-import com.my.bbs.util.PatternUtil;
 import com.my.bbs.util.Result;
 import com.my.bbs.util.ResultGenerator;
 import org.springframework.stereotype.Controller;
@@ -200,9 +199,7 @@ public class BBSUserController {
         if (!StringUtils.hasLength(loginName)) {
             return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_NULL.getResult());
         }
-//        if (!PatternUtil.isEmail(loginName)) {
-//            return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_NOT_EMAIL.getResult());
-//        }
+
         if (!StringUtils.hasLength(password)) {
             return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_PASSWORD_NULL.getResult());
         }
@@ -233,9 +230,6 @@ public class BBSUserController {
         if (!StringUtils.hasLength(loginName)) {
             return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_NULL.getResult());
         }
-//        if (!PatternUtil.isEmail(loginName)) {
-//            return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_NOT_EMAIL.getResult());
-//        }
         if (!StringUtils.hasLength(password)) {
             return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_PASSWORD_NULL.getResult());
         }

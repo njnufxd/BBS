@@ -2,9 +2,7 @@ package com.my.bbs.entity;
 
 import java.util.Date;
 
-/**
- * 评论-实体类
- */
+
 public class BBSPostComment {
     private Long commentId;
 

@@ -1,9 +1,6 @@
 package com.my.bbs.entity;
 
-/**
- * 帖子简易列表-实体类
- * 页面展示时需要的字段仅需要id、标题、评论数三个字段，因此新增了这个类
- */
+
 public class TopicBBSPostListEntity {
     private Long postId;
 

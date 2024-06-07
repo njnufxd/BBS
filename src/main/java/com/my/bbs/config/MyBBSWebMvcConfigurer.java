@@ -1,10 +1,3 @@
-/**
- * 严肃声明：
- * 开源版本请务必保留此注释头信息，若删除我方将保留所有法律责任追究！
- * 可正常分享和学习源码，不得用于违法犯罪活动，违者必究！
- * Copyright (c) 2021 十三 all rights reserved.
- * 版权所有，侵权必究！
- */
 package com.my.bbs.config;
 
 import com.my.bbs.common.Constants;
@@ -41,7 +34,8 @@ public class MyBBSWebMvcConfigurer implements WebMvcConfigurer {
                 .addPathPatterns("/userCenter")
                 .addPathPatterns("/userCenter/**")
                 .addPathPatterns("/myCenter")
-                .addPathPatterns("/userSet");
+                .addPathPatterns("/userSet")
+                .addPathPatterns("/admin");
     }
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

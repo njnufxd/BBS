@@ -2,10 +2,6 @@ package com.my.bbs.entity;
 
 import java.util.Date;
 
-/**
- * 帖子列表-实体类
- * 页面展示时需要的字段与帖子实体类不同，因此新增了这个类
- */
 public class BBSPostListEntity {
     private Long postId;
 

@@ -2,9 +2,7 @@ package com.my.bbs.entity;
 
 import java.util.Date;
 
-/**
- * 论坛用户-实体类
- */
+
 public class BBSUser {
     private Long userId;
 

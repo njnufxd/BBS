@@ -4,7 +4,6 @@ import com.my.bbs.dao.BBSPostCategoryMapper;
 import com.my.bbs.entity.BBSPostCategory;
 import com.my.bbs.service.BBSPostCategoryService;
 import com.my.bbs.util.Result;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +38,6 @@ public class BBSPostCategoryController {
     @ResponseBody
     public Result<BBSPostCategory> deleteCategory(@RequestBody String categoryName){
         System.out.println();
-//        if(bbsPostCategoryMapper.selectByName(categoryName)!=null){
-//            return new Result<>(400,"板块已存在");
-//        }
         if (bbsPostCategoryMapper.deleteByName(categoryName)>0){
             return new Result<>(200,"删除成功");
         }

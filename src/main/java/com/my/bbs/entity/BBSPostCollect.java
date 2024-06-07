@@ -2,6 +2,7 @@ package com.my.bbs.entity;
 
 import java.util.Date;
 
+
 public class BBSPostCollect {
     private Long recordId;
 

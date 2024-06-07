@@ -3,14 +3,6 @@ package com.my.bbs.util;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 分页工具类
- *
- * @author 13
- * @qq交流群 719099151
- * @email 2449207463@qq.com
- * @link https://github.com/ZHENFENG13/My-BBS
- */
 public class PageResult implements Serializable {
 
     //总记录数
@@ -24,14 +16,6 @@ public class PageResult implements Serializable {
     //列表数据
     private List<?> list;
 
-    /**
-     * 分页
-     *
-     * @param list       列表数据
-     * @param totalCount 总记录数
-     * @param pageSize   每页记录数
-     * @param currPage   当前页数
-     */
     public PageResult(List<?> list, int totalCount, int pageSize, int currPage) {
         this.list = list;
         this.totalCount = totalCount;

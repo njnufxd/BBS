@@ -1,6 +1,5 @@
 package com.my.bbs.dao;
 
-import com.my.bbs.entity.BBSPost;
 import com.my.bbs.entity.BBSPostComment;
 import com.my.bbs.util.PageQueryUtil;
 import org.apache.ibatis.annotations.Param;

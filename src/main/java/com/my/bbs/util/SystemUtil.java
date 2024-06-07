@@ -6,23 +6,11 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.security.MessageDigest;
 
-/**
- * @author 13
- * @qq交流群 719099151
- * @email 2449207463@qq.com
- * @link https://github.com/ZHENFENG13/My-BBS
- */
 public class SystemUtil {
 
     private SystemUtil() {
     }
 
-    /**
-     * 登录或注册成功后,生成保持用户登录状态会话token值
-     *
-     * @param src:为用户最新一次登录时的now()+user.id+random(4)
-     * @return
-     */
     public static String genToken(String src) {
         if (null == src || "".equals(src)) {
             return null;
@@ -41,11 +29,6 @@ public class SystemUtil {
         }
     }
 
-    /**
-     * 清理string
-     * @param value
-     * @return
-     */
     public static String cleanString(String value) {
         if (!StringUtils.hasLength(value)) {
             return "";

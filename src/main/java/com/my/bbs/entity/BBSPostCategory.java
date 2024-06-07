@@ -2,9 +2,7 @@ package com.my.bbs.entity;
 
 import java.util.Date;
 
-/**
- * 帖子分类-实体类
- */
+
 public class BBSPostCategory {
     private Integer categoryId;
 
