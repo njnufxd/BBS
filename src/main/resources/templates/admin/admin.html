@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员系统</title>
+    <!-- 引入Layui的CSS文件 -->
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui-v2.6.8/css/layui.css">
+    <script src="https://www.layuicdn.com/layui-v2.6.8/layui.js"></script>
+    <script src="https://www.layuicdn.com/layui-v2.6.8/css/modules/element.css"></script>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+
+    <style>
+        /* 用户列表样式 */
+        #userList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        /* 用户列表项样式 */
+        #userList li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .layui-body {
+            padding: 15px;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .search-container {
+            position: relative;
+
+            display: flex;
+            vertical-align: middle;
+        }
+
+        .search-input {
+            margin-top: 10px;
+            width: 0;
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: width 0.3s, opacity 0.3s;
+            opacity: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .search-input.active {
+            width: 200px;
+            opacity: 1;
+        }
+
+        .search-icon {
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sidebar {
+            width: 230px;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+        }
+
+        .board-container {
+
+            padding: 10px;
+        }
+
+        .board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .board-item {
+            width: 100px;
+            height: 75px;
+            background-color: #1E90FF;
+            color: white;
+            text-align: center;
+            line-height: 75px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .board-item:hover {
+            background-color: #36D1DC;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .board-item:active {
+            transform: scale(0.95);
+        }
+
+        /* 添加板块按钮样式 */
+        button.add-category {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 28px;
+            border: 1px solid #45a049;
+            background-color: #45a049;
+            box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
+            height: 36px;
+        }
+
+        /* 删除板块按钮样式 */
+        button.delete-category {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 28px;
+            border: 1px solid #e53935;
+            background-color: #e53935;
+            box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
+            height: 36px;
+
+        }
+
+        /* 按钮文字样式 */
+        button.add-category span,
+        button.delete-category span {
+            font-family: '微软雅黑', sans-serif;
+            font-weight: bold;
+            color: white;
+            margin: 0 5px;
+        }
+
+        .new-input {
+            width: 200px;
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: width 0.3s, opacity 0.3s;
+            opacity: 1;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+
+        /* 用户头像样式 */
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* 用户名样式 */
+        .user-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* 已封禁样式 */
+        .user-status-2 {
+            font-size: 14px;
+            color: red;
+        }
+
+        /* 已通过样式 */
+        .user-status-1 {
+            font-size: 14px;
+            color: green;
+        }
+
+        /* 未审核样式 */
+        .user-status-0 {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .action-button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        /* 通过按钮样式 */
+        .approve-button {
+            background-color: #5FB878;
+            color: white;
+        }
+
+        /* 封禁按钮样式 */
+        .ban-button {
+            background-color: #FF5722;
+            color: white;
+        }
+        #resetDefault{
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 头部导航栏 -->
+        <div class="layui-header">
+            <div class="layui-logo">管理员系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+                        <a href="javascript:;" id="search-icon" class="search-icon">
+                            <i class="layui-icon layui-icon-search"></i>
+                        </a>
+                    </div>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" id="notification-icon">
+                        <i class="layui-icon layui-icon-notice"></i>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">消息1</a></dd>
+                        <dd><a href="javascript:;">消息2</a></dd>
+                        <dd><a href="javascript:;">消息3</a></dd>
+                    </dl>
+                </li>
+                <th:block style="display:inline-block;" th:if="${session.myBBSUser==null}">
+                    <li class="layui-nav-item">
+                        <a class="iconfont icon-touxiang layui-hide-xs" th:href="@{/login}"></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a th:href="@{/login}">登入</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a th:href="@{/register}">注册</a>
+                    </li>
+                </th:block>
+
+                <th:block style="display:inline-block;" th:unless="${session.myBBSUser==null}">
+                    <li class="layui-nav-item">
+                        <a class="fly-nav-avatar" href="javascript:;">
+                            <cite class="layui-hide-xs" th:text="${session.myBBSUser.nickName}"></cite>
+                            <th:block th:if="${session.myBBSUser.gender=='男'}">
+                                <i class="iconfont icon-nan"></i>
+                            </th:block>
+                            <th:block th:if="${session.myBBSUser.gender=='女'}">
+                                <i class="iconfont icon-nv"></i>
+                            </th:block>
+                            <th:block th:if="${session.myBBSUser.gender=='未知'}">
+                                <i class="iconfont icon-biaoqing"></i>
+                            </th:block>
+                            <img th:src="@{${session.myBBSUser.headImgUrl}}">
+                            <span class="layui-nav-more"></span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a th:href="@{/userSet}"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
+                            <dd><a th:href="@{/myCenter}"><i class="layui-icon"
+                                        style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
+                            </dd>
+                            <hr style="margin: 5px 0;">
+                            <dd><a th:href="@{/logout}" style="text-align: center;">退出</a></dd>
+                        </dl>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+
+        <!-- 侧边栏菜单 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-this" data-content="categoryAdmin">
+                        <a href="javascript:;">板块管理</a>
+                    </li>
+                    <li class="layui-nav-item" data-content="postAdmin">
+                        <a href="javascript:;">帖子管理</a>
+                    </li>
+                    <li class="layui-nav-item" data-content="userAdmin">
+                        <a href="javascript:;">用户管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body">
+            <div id="categoryAdmin" class="content active">
+                <div class="board-container">
+                    <div class="title">
+                        板块分类
+                    </div>
+                    <div class="board" id="board">
+                        <!-- <th:block th:unless="${null == bbsPostCategories}">
+                                <th:block th:each="c : ${bbsPostCategories}">
+                                    <div th:class="board-item " onclick="toCategory(this)">
+                                        <a th:text="${c.categoryName}">分享</a>
+                                    </div>
+                                </th:block>
+                            </th:block> -->
+                        <!-- <div class="board-item">技术讨论</div>
+                            <div class="board-item">资源分享</div>
+                            <div class="board-item">问题求助</div>
+                            <div class="board-item">活动专区</div> -->
+
+                    </div>
+                    <!-- 添加板块按钮 -->
+                    <div style="padding: 10px;">
+                        <input type="text" class="new-input" id="new-input" placeholder="输入板块名称"><button
+                            class="add-category" id="newCategoryBtn"><span>添加板块</span></button>
+                        <!-- 删除板块按钮 -->
+                        <button class="delete-category" id="deleteCategoryBtn"><span>删除板块</span></button>
+                    </div>
+                </div>
+            </div>
+            <div id="postAdmin" class="content">
+                <h1>帖子管理</h1>
+                <div class="layui-col-md8">
+                    <div class="fly-panel" style="margin-bottom: 0;">
+                        <div class="fly-panel-title fly-filter">
+                            <a id="resetDefault">恢复默认</a>
+                            <!-- <div id="category"></div> -->
+                            <!-- <th:block th:unless="${null == bbsPostCategories}">
+                                <th:block th:each="c : ${bbsPostCategories}">
+                                    <a th:if="${null !=categoryId and categoryId==c.categoryId}"
+                                        th:text="${c.categoryName}">分享
+                                    </a>
+                                </th:block>
+                            </th:block> -->
+
+                            <!-- <a th:href="@{/index(keyword=${keyword},categoryId=${categoryId},orderBy=${orderBy})}"
+                                th:class="${period == null ? 'layui-this':''}">默认</a>-->
+
+                            <span class="fly-filter-right layui-hide-xs" id="orderBy">
+                                <a href="#" id="orderByNew">按最新</a>
+                                <span class="fly-mid"></span>
+                                <a href="#" id="orderByHot">按热议</a>
+                            </span>
+                        </div>
+                        <!-- 2.渲染帖子分页列表数据 -->
+                        <ul id="bbsPostList" class="fly-list">
+                            <!-- 无数据时 -->
+                            <div class="fly-none">没有相关数据</div>
+                        </ul>
+                        <!-- 3.生成分页按钮 -->
+                        <div style="text-align: center">
+                            <div class="laypage-main" id="laypage-main">
+                            </div>
+                        </div>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+            <div id="userAdmin" class="content">
+                <h1>用户管理</h1>
+                <ul id="userList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Layui的JavaScript文件 -->
+    <script src="https://cdn.staticfile.org/layui/2.5.7/layui.js"></script>
+    <script th:src="@{/js/public.js}"></script>
+
+    <script>
+        layui.use(['element', 'layer'], function () {
+            var element = layui.element;
+            var layer = layui.layer;
+
+            // 监听导航栏点击事件
+            element.on('nav(test)', function (elem) {
+                var contentId = elem.parent().attr('data-content');
+                // 切换内容区域
+                document.querySelectorAll('.content').forEach(function (content) {
+                    content.classList.remove('active');
+                });
+                document.getElementById(contentId).classList.add('active');
+
+                // 切换选中状态
+                document.querySelectorAll('.layui-nav-item').forEach(function (navItem) {
+                    navItem.classList.remove('layui-this');
+                });
+                elem.parent().addClass('layui-this');
+            });
+
+            // 搜索图标点击事件
+            document.getElementById('search-icon').addEventListener('click', function () {
+                var searchInput = document.getElementById('search-input');
+                if (searchInput.classList.contains('active')) {
+                    searchInput.classList.remove('active');
+                } else {
+                    searchInput.classList.add('active');
+                    searchInput.focus();
+                }
+                console.log("search");
+            });
+
+            // 通知图标点击事件
+            document.getElementById('notification-icon').addEventListener('click', function () {
+                layer.open({
+                    type: 1,
+                    title: '消息列表',
+                    shadeClose: true,
+                    area: '300px',
+                    content: '<div style="padding: 20px;">' +
+                        '<p>消息1</p>' +
+                        '<p>消息2</p>' +
+                        '<p>消息3</p>' +
+                        '</div>'
+                });
+            });
+        });
+
+    </script>
+    <script>
+        var bbsPostCategories = [
+        ]
+        fetch('/category/all')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                bbsPostCategories = data;
+                renderCategoryList();
+            })
+        function renderCategoryList() {
+            document.getElementById('board').innerHTML = '';
+            bbsPostCategories.forEach(function (item) {
+                var div = document.createElement('div');
+                div.className = 'board-item';
+                div.innerHTML = `<a>${item.categoryName}</a>`;
+                div.addEventListener('click', function () {
+                    toCategory(item.categoryId);
+                });
+                document.getElementById('board').appendChild(div);
+            });
+        }
+        bbsPostCategories.forEach(function (category) {
+            var categoryItem = document.createElement('li');
+            categoryItem.innerHTML = '<a href="##">' + category.name + '</a>';
+            document.getElementById('categoryList').appendChild(categoryItem);
+
+        });
+        // 点击新建板块按钮
+        document.getElementById('newCategoryBtn').onclick = function () {
+            if (document.getElementById('new-input').value == null || document.getElementById('new-input').value == '') {
+                alert('请输入板块名称');
+            } else {
+                fetch('/addCategory', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: document.getElementById('new-input').value
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.resultCode == 200) {
+                            alert('新建成功');
+                            console.log(data);
+                            window.location.reload();
+                        } else {
+                            alert('新建失败');
+                        }
+
+                    }).catch(error => console.error('Error:', error));
+
+            }
+        }
+        document.getElementById('deleteCategoryBtn').onclick = function () {
+            if (document.getElementById('new-input').value == null || document.getElementById('new-input').value == '') {
+                alert('请输入板块名称');
+            } else {
+                fetch('/deleteCategory', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: document.getElementById('new-input').value
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.resultCode == 200) {
+                            alert('删除成功');
+                            console.log(data);
+                            window.location.reload();
+                        } else {
+                            alert('删除失败');
+                        }
+
+                    }).catch(error => console.error('Error:', error));
+
+            }
+        }
+        function toCategory(categoryId) {
+            // 获取分类名称
+            console.log(categoryId);
+            // 进行你的操作，例如跳转到相应页面
+            // alert('跳转到:' + categoryId);
+            data.keyword = "";
+            data.period = "";
+            data.orderBy = "";
+            data.page = 1;
+            data.categoryId = categoryId;
+            document.querySelectorAll('.content').forEach(function (content) {
+                content.classList.remove('active');
+            });
+            document.getElementById("postAdmin").classList.add('active');
+            // 切换选中状态
+            document.querySelectorAll('.layui-nav-item').forEach(function (navItem) {
+                navItem.classList.remove('layui-this');
+                if (navItem.getAttribute('data-content') === "postAdmin") {
+                    navItem.classList.add('layui-this');
+                }
+            });
+            renderPostPage();
+        }
+    </script>
+    <script>
+        // 假设pageResult是一个对象，包含list属性
+
+        var data = {
+            categoryId: 0,
+            keyword: '',
+            period: '',
+            orderBy: '',
+            page: 1,
+        }
+        var pageResult = {
+            totalCount: 0,
+            pageSize: 0,
+            totalPage: 0,
+            currPage: 0,
+            list: []
+        };
+
+        function renderPostPage() {
+            const url = `/admin/pageList?categoryId=${data.categoryId}&page=${data.page}&keyword=${data.keyword}&period=${data.period}&orderBy=${data.orderBy}`;
+
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+                    result.data.list.map(function (item) {
+                        var dateStr = item.createTime;
+                        var date = new Date(dateStr);
+                        var formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+                        item.createTime = formattedDate;
+                        return item;
+                    });
+                    pageResult = result.data;
+                    renderCategoryDiv();
+                    renderPageResult();
+                    renderOrderBy();
+                    renderpaging();
+                    console.log("renderPostPage");
+                })
+        }
+
+        function renderpaging() {
+            var pageResultDiv = document.getElementById('laypage-main');
+            pageResultDiv.innerHTML = '';
+            var prevButton1 = document.createElement("a");
+            prevButton1.className = "laypage-prev";
+            if (pageResult.currPage > 1) {
+                prevButton1.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    data.page = pageResult.currPage - 1;
+                    renderPostPage();
+                })
+            }
+            prevButton1.textContent = '<<';
+            pageResultDiv.appendChild(prevButton1);
+
+
+
+            if (pageResult.currPage - 2 >= 1) {
+                var prevButton2 = document.createElement("a");
+                prevButton2.className = 'laypage-prev';
+                prevButton2.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    data.page = pageResult.currPage - 2;
+                    renderPostPage();
+                })
+                prevButton2.textContent = pageResult.currPage - 2;
+                pageResultDiv.appendChild(prevButton2);
+            }
+            if (pageResult.currPage - 1 >= 1) {
+                var prevButton3 = document.createElement("a");
+                prevButton3.className = 'laypage-prev';
+                prevButton3.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    data.page = pageResult.currPage - 1;
+                    renderPostPage();
+                })
+                prevButton3.textContent = pageResult.currPage - 1;
+                pageResultDiv.appendChild(prevButton3);
+            }
+
+
+            var prevButton4 = document.createElement("a");
+            prevButton4.className = 'laypage-curr';
+            prevButton4.textContent = pageResult.currPage;
+            pageResultDiv.appendChild(prevButton4);
+
+
+            if (pageResult.currPage + 1 <= pageResult.totalPage) {
+                var prevButton5 = document.createElement("a");
+                prevButton5.className = 'laypage-next';
+                prevButton5.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    data.page = pageResult.currPage + 1;
+                    renderPostPage();
+                })
+                prevButton5.textContent = pageResult.currPage + 1;
+                pageResultDiv.appendChild(prevButton5);
+            }
+            if (pageResult.currPage + 2 <= pageResult.totalPage) {
+                var prevButton6 = document.createElement("a");
+                prevButton6.className = 'laypage-next';
+                prevButton6.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    console.log(6);
+                    data.page = pageResult.currPage + 2;
+                    renderPostPage();
+                })
+                prevButton6.textContent = pageResult.currPage + 2;
+                pageResultDiv.appendChild(prevButton6);
+            }
+            var prevButton7 = document.createElement("a");
+            prevButton7.className = "laypage-next";
+            if (pageResult.currPage < pageResult.totalPage) {
+                prevButton7.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    console.log(7);
+                    data.page = pageResult.currPage + 1;
+                    renderPostPage();
+                })
+            }
+            prevButton7.textContent = '>>';
+            pageResultDiv.appendChild(prevButton7);
+        }
+
+        function renderOrderBy() {
+            var orderByNew = document.getElementById('orderByNew');
+            var orderByHot = document.getElementById('orderByHot');
+            if (data.orderBy == 'comment') {
+                orderByHot.className = 'layui-this';
+                orderByNew.className = '';
+            }
+            else if (data.orderBy == 'new') {
+                orderByNew.className = 'layui-this';
+                orderByHot.className = '';
+            } else {
+                orderByHot.className = '';
+                orderByNew.className = '';
+            }
+        }
+
+
+        function renderPageResult() {
+            var bbsPostList = document.getElementById('bbsPostList');
+            bbsPostList.innerHTML = '';
+            pageResult.list.forEach(function (item) {
+                var li = document.createElement('li');
+                li.innerHTML = `
+                                        <a href="/userCenter/`+ item.publishUserId + `"
+                                            class="fly-avatar">
+                                            <img src="`+ item.headImgUrl + `"
+                                                alt="`+ item.nickName + `">
+                                        </a>
+                                        <h2>
+                                            <a href="##" class="layui-badge"
+                                                >`+ item.postCategoryName + `</a>
+                                            <a href="/detail/`+ item.postId + `"
+                                                >`+ item.postTitle + `</a>
+                                        </h2>
+                                        <div class="fly-list-info">
+                                            <a href="/userCenter/`+ item.publishUserId + `" link>
+                                                <cite>`+ item.nickName + `</cite>
+                                            </a>
+                                            <span
+                                                >`+ item.createTime + `</span>
+                                            <span class="fly-list-kiss layui-hide-xs" title="赞"><i
+                                                    class="iconfont icon-zan"></i>
+                                                <th:block>`+ item.postCollects + `</th:block>
+                                            </span>
+                                            <span class="user-status-` + item.postStatus + `">` + statusList[item.postStatus] + `</span>
+                                            <button class="action-button approve-button" onclick="approvePost(` + item.postId + `)">通过</button>
+                                            <button class="action-button ban-button" onclick="banPost(` + item.postId + `)">封禁</button>
+                                            <span class="fly-list-nums"><i class="iconfont icon-pinglun1"
+                                                    title="评论"></i>
+                                                <th:block>`+ item.postComments + `</th:block>
+                                            </span>
+                                        </div>
+                                        <div class="fly-list-badge">
+                                        </div>
+                `;
+                bbsPostList.appendChild(li);
+            })
+        }
+        document.getElementById('orderByNew').addEventListener("click", function () {
+            data.orderBy = 'new';
+            renderPostPage();
+        });
+        document.getElementById('orderByHot').addEventListener("click", function () {
+            data.orderBy = 'comment';
+            renderPostPage();
+        })
+        // 添加恢复默认事件
+        var resetDefaultLink = document.getElementById('resetDefault');
+        resetDefaultLink.onclick = function () {
+            // 在这里添加恢复默认的逻辑
+            console.log('恢复默认');
+            data.categoryId = 0;
+            data.keyword = "";
+            data.period = "";
+            data.orderBy = "";
+            data.page = 1;
+            renderPostPage();
+        };
+        // 渲染当前帖子所属板块
+        function renderCategoryDiv() {
+            var resetDefaultLink = document.getElementById('resetDefault');
+            var category = document.getElementById('category');
+            if(data.categoryId == 0 && category){
+                category.remove(); 
+            }
+                
+            // var categoriesDiv = document.getElementById('category');
+            // categoriesDiv.innerHTML = '';
+            bbsPostCategories.forEach(function (item) {
+               
+                if (data.categoryId == item.categoryId) {
+                    if (category) {
+                        category.textContent = item.categoryName;
+                    } else {
+                        var a = document.createElement('a');
+                        a.textContent = item.categoryName;
+                        // categoriesDiv.appendChild(a);
+                        a.id = "category";
+                        resetDefaultLink.insertAdjacentElement('afterend', a);
+                    }
+                }
+            });
+
+        }
+        // 审核帖子
+        function approvePost(postId) {
+            console.log('通过帖子ID:', postId);
+
+            pageResult.list.forEach(function (post) {
+                if (post.postId === postId) {
+                    if (post.postStatus === 1) {
+                        alert("该帖子已通过审核,请勿重复点击");
+                    } else {
+                        fetch('/admin/approvePost', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `postId=${post.postId}`
+                        })
+                            .then(response => response.json())
+                            .then(result => {
+                                console.log('审核结果:', result);
+                                if (result.resultCode === 200) {
+                                    post.postStatus = 1;
+                                    renderPageResult();
+                                } else {
+                                    alert("审核失败");
+                                }
+                            })
+                    }
+                }
+            });
+        }
+
+        // 封禁帖子
+        function banPost(postId) {
+            console.log('封禁帖子ID:', postId);
+            pageResult.list.forEach(function (post) {
+                if (post.postId === postId) {
+                    if (post.postStatus === 2) {
+                        alert("该帖子已封禁,请勿重复点击");
+                    } else {
+                        fetch('/admin/banPost', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `postId=${post.postId}`
+                        })
+                            .then(response => response.json())
+                            .then(result => {
+                                console.log('审核结果:', result);
+                                if (result.resultCode === 200) {
+                                    post.postStatus = 2;
+                                    renderPageResult();
+                                } else {
+                                    alert("审核失败");
+                                }
+                            })
+                    }
+                }
+            });
+        }
+        renderPostPage();
+
+    </script>
+    <script>
+        // 用户数据
+        var users = [
+        ];
+        fetch('/users')
+            .then(response => response.json())
+            .then(result => {
+                users = result;
+                renderUserList();
+            })
+            .catch(error => {
+                console.error('获取用户数据失败:', error);
+            });
+        // 状态列表
+        var statusList = ["未审核", "已通过", "已封禁"];
+
+        // 渲染用户列表
+        function renderUserList() {
+            var userList = document.getElementById('userList');
+            userList.innerHTML = '';
+            users.forEach(function (user) {
+                var li = document.createElement('li');
+                li.innerHTML = '<img class="user-avatar" src="' + user.headImgUrl + '" alt="' + user.nickName + '">' +
+                    '<span class="user-name">' + user.nickName + '</span>' +
+                    '<span class="user-status-' + user.userStatus + '">' + statusList[user.userStatus] + '</span>' +
+                    '<button class="action-button approve-button" onclick="approveUser(' + user.userId + ')">通过</button>' +
+                    '<button class="action-button ban-button" onclick="banUser(' + user.userId + ')">封禁</button>' +
+                    '<button class="action-button check-button" onclick="checkUser(' + user.userId + ')"> 查看主页</button>';
+                userList.appendChild(li);
+
+            });
+        }
+
+        // 审核用户
+        function approveUser(userId) {
+            console.log('通过用户ID:', userId);
+
+            users.forEach(function (user) {
+                if (user.userId === userId) {
+                    if (user.userStatus === 1) {
+                        alert("该用户已通过审核,请勿重复点击");
+                    } else {
+                        fetch('/admin/approveUser', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `userId=${user.userId}`
+                        })
+                            .then(response => response.json())
+                            .then(result => {
+                                console.log('审核结果:', result);
+                                if (result.resultCode === 200) {
+                                    user.userStatus = 1;
+                                    renderUserList();
+                                } else {
+                                    alert("审核失败");
+                                }
+                            })
+                    }
+                }
+
+            });
+
+        }
+
+        // 封禁用户
+        function banUser(userId) {
+            console.log('封禁用户ID:', userId);
+            // 在这里添加封禁用户的逻辑
+            users.forEach(function (user) {
+                if (user.userId === userId) {
+                    if (user.userStatus === 2) {
+                        alert("该用户已封禁,请勿重复点击");
+                    } else {
+                        fetch('/admin/banUser', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `userId=${user.userId}`
+                        })
+                            .then(response => response.json())
+                            .then(result => {
+                                console.log('审核结果:', result);
+                                if (result.resultCode === 200) {
+                                    user.userStatus = 2;
+                                    renderUserList();
+                                } else {
+                                    alert("审核失败");
+                                }
+                            })
+                    }
+                }
+            });
+        }
+        function checkUser(userId) {
+            window.location.href = 'userCenter/' + userId;
+        }
+    </script>
+</body>
+
+</html>

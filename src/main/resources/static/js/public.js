@@ -1,16 +1,16 @@
-<!-- 正则验证 start-->
-/**
- * 判空
- *
- * @param obj
- * @returns {boolean}
- */
-function isNull(obj) {
-    if (obj == null || obj == undefined || obj.trim() == "") {
-        return true;
+
+    /**
+     * 判空
+     *
+     * @param obj
+     * @returns {boolean}
+     */
+    function isNull(obj) {
+        if (obj == null || obj == undefined || obj.trim() == "") {
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 
 /**
  * 参数长度验证
@@ -132,5 +132,65 @@ function validPassword(password) {
         return (false);
     }
 }
+layui.use(['element', 'layer'], function () {
+    var element = layui.element;
+    var layer = layui.layer;
 
-<!-- 正则验证 end-->
+    // 监听导航栏点击事件
+    element.on('nav(test)', function (elem) {
+        var contentId = elem.parent().attr('data-content');
+        // 切换内容区域
+        document.querySelectorAll('.content').forEach(function (content) {
+            content.classList.remove('active');
+        });
+        document.getElementById(contentId).classList.add('active');
+
+        // 切换选中状态
+        document.querySelectorAll('.layui-nav-item').forEach(function (navItem) {
+            navItem.classList.remove('layui-this');
+        });
+        elem.parent().addClass('layui-this');
+    });
+
+    // 搜索图标点击事件
+    document.getElementById('search-icon').addEventListener('click', function () {
+        var searchInput = document.getElementById('search-input');
+        if (searchInput.classList.contains('active')) {
+            searchInput.classList.remove('active');
+        } else {
+            searchInput.classList.add('active');
+            searchInput.focus();
+        }
+        console.log("search");
+    });
+
+    // 通知图标点击事件
+    document.getElementById('notification-icon').addEventListener('click', function () {
+        layer.open({
+            type: 1,
+            title: '消息列表',
+            shadeClose: true,
+            area: '300px',
+            content: '<div style="padding: 20px;">' +
+                '<p>消息1</p>' +
+                '<p>消息2</p>' +
+                '<p>消息3</p>' +
+                '</div>'
+        });
+    });
+});
+document.getElementById("search-input").onkeydown = function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        handleSubmit();
+    }
+    console.log(event.keyCode);
+}
+function handleSubmit() {
+    var value = document.getElementById("search-input").value;
+    if (value == "") {
+        alert("请输入内容");
+    } else {
+        window.location.href = "/index?keyword=" + value;
+    }
+}

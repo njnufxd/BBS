@@ -31,7 +31,7 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8 content detail">
             <div class="fly-panel detail-box">
-                <h1 th:text="${bbsPost.postTitle}">My-BBs开源啦</h1>
+                <h1 th:text="${bbsPost.postTitle}"></h1>
                 <div class="fly-detail-info">
                     <div>
                         <a class="layui-btn layui-btn-xs jie-admin"
@@ -49,7 +49,7 @@
                     </a>
                     <div class="fly-detail-user">
                         <a th:href="@{${'/userCenter/'+bbsUser.userId}}" class="fly-link">
-                            <cite th:text="${bbsUser.nickName}">程序员十三</cite>
+                            <cite th:text="${bbsUser.nickName}"></cite>
                             <span>
                               <th:block th:if="${bbsUser.userStatus==0}">账号正常
                               </th:block>
@@ -59,9 +59,9 @@
                         </a>
                     </div>
                     <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
-                        <span th:text="${#dates.format(bbsPost.createTime, 'yyyy-MM-dd')}">2021-08-01</span>
+                        <span th:text="${#dates.format(bbsPost.createTime, 'yyyy-MM-dd')}"></span>
                         <span style="margin-left: 6px; padding-right: 10px; color: #FF7200"
-                              th:text="${'最新修改时间：'+#dates.format(bbsPost.lastUpdateTime, 'yyyy-MM-dd HH:mm:ss')}">2021-08-01</span>
+                              th:text="${'最新修改时间：'+#dates.format(bbsPost.lastUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                     </div>
                 </div>
                 <div class="detail-body photos" th:utext="${bbsPost.postContent}">
@@ -109,11 +109,11 @@
                                     <div class="fly-detail-user">
                                         <a th:href="@{${'/userCenter/'+bbsCommentListEntity.commentUserId}}"
                                            class="fly-link">
-                                            <cite th:text="${bbsCommentListEntity.nickName}">程序员十三</cite>
+                                            <cite th:text="${bbsCommentListEntity.nickName}"></cite>
                                         </a>
                                     </div>
                                     <div class="detail-hits">
-                                        <span th:text="${#dates.format(bbsCommentListEntity.commentCreateTime, 'yyyy-MM-dd HH:mm:ss')}">2021-08-01</span>
+                                        <span th:text="${#dates.format(bbsCommentListEntity.commentCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                     </div>
                                 </div>
                                 <div class="detail-body jieda-body photos">
@@ -217,8 +217,8 @@
             </div>
         </div>
         <div class="layui-col-md4">
-            <dl class="fly-panel fly-list-one">
-                <dt class="fly-panel-title">本周热议</dt>
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">最新帖子</h3>
                 <th:block th:if="${#lists.isEmpty(hotTopicBBSPostList)}">
                     <!-- 无数据时 -->
                     <div class="fly-none">没有相关数据</div>
@@ -227,45 +227,38 @@
                     <th:block th:each="bbsEntity : ${hotTopicBBSPostList}">
                         <dd>
                             <a th:href="@{'/detail/'+${bbsEntity.postId}}"
-                               th:text="${bbsEntity.postTitle}">My-BBS开源啦</a>
+                               th:text="${bbsEntity.postTitle}"></a>
+                            <span><i class="iconfont icon-pinglun1"></i> <th:block
+                                    th:text="${bbsEntity.postComments}"></th:block></span>
+                        </dd>
+                    </th:block>
+                </th:block>
+            </div>
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">最热帖子</dt>
+                <th:block th:if="${#lists.isEmpty(hotTopicBBSPostList)}">
+                    <!-- 无数据时 -->
+                    <div class="fly-none">没有相关数据</div>
+                </th:block>
+                <th:block th:unless="${#lists.isEmpty(hotTopicBBSPostList)}">
+                    <th:block th:each="bbsEntity : ${hotTopicBBSPostList}">
+                        <dd>
+                            <a th:href="@{'/detail/'+${bbsEntity.postId}}"
+                               th:text="${bbsEntity.postTitle}"></a>
                             <span><i class="iconfont icon-pinglun1"></i> <th:block
                                     th:text="${bbsEntity.postComments}"></th:block></span>
                         </dd>
                     </th:block>
                 </th:block>
             </dl>
-
-            <div class="fly-panel">
-                <div class="fly-panel-title">
-                    我的公众号
-                </div>
-                <div class="fly-panel-main">
-                    <a href="https://juejin.im/user/59199e22a22b9d0058279886" target="_blank">
-                        <img style="max-width: 100%;" th:src="@{/images/my-gzh-qrcode.jpg}">
-                    </a>
-                </div>
-            </div>
-
-            <div class="fly-panel">
-                <div class="fly-panel-title">
-                    我的新书
-                </div>
-                <div class="fly-panel-main">
-                    <a href="https://item.jd.com/12890115.html" target="_blank">
-                        <img style="max-width: 100%;" th:src="@{/images/my-book01.png}">
-                    </a>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
 
-<div class="fly-footer">
-    <p>My-BBS社区 2021 &copy; <a href="https://github.com/ZHENFENG13/My-BBS" target="_blank">十三</a></p>
-</div>
 
-<script th:src="@{/layui/layui.js}"></script>
+
+
+<script src="https://cdn.staticfile.org/layui/2.5.7/layui.js"></script>
 <script th:src="@{/js/public.js}"></script>
 
 <script type="text/javascript">
@@ -303,14 +296,7 @@
                 data: params,
                 success: function (result) {
                     if (result.resultCode == 200) {
-                        layer.confirm('评论成功!将刷新本页面...', {
-                            icon: 3,
-                            skin: 'layui-layer-molv',
-                            title: '提示'
-                        }, function (index) {
-                            layer.close(index);
                             window.location.reload();
-                        });
                     } else {
                         layer.msg(result.message);
                     }
@@ -330,14 +316,7 @@
                 url: '/delReply/' + commentId,
                 success: function (result) {
                     if (result.resultCode == 200) {
-                        layer.confirm('删除成功!将刷新本页面...', {
-                            icon: 3,
-                            skin: 'layui-layer-molv',
-                            title: '提示'
-                        }, function (index) {
-                            layer.close(index);
                             window.location.reload();
-                        });
                     } else {
                         layer.msg(result.message);
                     }
@@ -357,14 +336,7 @@
                 url: '/addCollect/' + postId,
                 success: function (result) {
                     if (result.resultCode == 200) {
-                        layer.confirm('收藏成功!将刷新本页面...', {
-                            icon: 3,
-                            skin: 'layui-layer-molv',
-                            title: '提示'
-                        }, function (index) {
-                            layer.close(index);
                             window.location.reload();
-                        });
                     } else {
                         layer.msg(result.message);
                     }
@@ -384,14 +356,7 @@
                 url: '/delCollect/' + postId,
                 success: function (result) {
                     if (result.resultCode == 200) {
-                        layer.confirm('取消收藏成功!将刷新本页面...', {
-                            icon: 3,
-                            skin: 'layui-layer-molv',
-                            title: '提示'
-                        }, function (index) {
-                            layer.close(index);
                             window.location.reload();
-                        });
                     } else {
                         layer.msg(result.message);
                     }
